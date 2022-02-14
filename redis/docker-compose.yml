@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+
+  redis:
+    image: redis:latest
+    container_name: redis_fastapi_db
+    ports:
+      - 6379:6379
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: redis-ui
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+      - HTTP_USER=admin
+      - HTTP_PASSWORD=admin
+    ports:
+      - 8081:8081
+    depends_on:
+      - redis
+    
+volumes:
+  redis-data:
